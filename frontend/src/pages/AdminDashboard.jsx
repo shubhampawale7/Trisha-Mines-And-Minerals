@@ -1,81 +1,96 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+/* eslint-disable no-unused-vars */
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  FaImages,
+  FaChartBar,
+  FaDatabase,
+  FaSignOutAlt,
+  FaReply,
+} from "react-icons/fa";
+
+const dashboardData = [
+  {
+    title: "Manage Gallery",
+    route: "/admin/manage-gallery",
+    icon: <FaImages className="text-[#D9AE4E] text-5xl mb-4" />,
+  },
+  {
+    title: "View Inquiries",
+    route: "/admin/inquiries",
+    icon: <FaReply className="text-[#D9AE4E] text-5xl mb-4" />,
+  },
+  {
+    title: "Website Analytics",
+    route: "/admin/analytics",
+    icon: <FaChartBar className="text-[#D9AE4E] text-5xl mb-4" />,
+  },
+  {
+    title: "Backup Database",
+    route: "/admin/backup",
+    icon: <FaDatabase className="text-[#D9AE4E] text-5xl mb-4" />,
+  },
+];
 
 const AdminDashboard = () => {
-  const [products, setProducts] = useState([]);
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-    price: "",
-    imageUrl: "",
-  });
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/products")
-      .then((res) => setProducts(res.data));
-  }, []);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await axios.post("http://localhost:5000/api/products", form);
-    alert("Product added!");
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:5000/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // Send cookies
+      });
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed. Please try again.");
+    }
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          className="p-2 border rounded w-full"
-          type="text"
-          name="name"
-          placeholder="Product Name"
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="p-2 border rounded w-full"
-          type="text"
-          name="description"
-          placeholder="Description"
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="p-2 border rounded w-full"
-          type="number"
-          name="price"
-          placeholder="Price"
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="p-2 border rounded w-full"
-          type="text"
-          name="imageUrl"
-          placeholder="Image URL"
-          onChange={handleChange}
-          required
-        />
-        <button className="bg-green-500 text-white p-2 rounded" type="submit">
-          Add Product
-        </button>
-      </form>
-      <div className="mt-6">
-        <h3 className="text-xl font-bold">Products</h3>
-        <ul>
-          {products.map((product) => (
-            <li key={product._id} className="p-2 border-b">
-              {product.name} - ₹{product.price}
-            </li>
-          ))}
-        </ul>
+    <div className="bg-[#FDF9F3] text-[#2B1A0F] min-h-screen flex flex-col items-center p-8 mt-20">
+      {/* Heading */}
+      <motion.h1
+        className="text-4xl md:text-5xl font-bold text-[#D9AE4E] text-center mb-12"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        Admin Dashboard
+      </motion.h1>
+
+      {/* Dashboard Cards */}
+      <div className="grid md:grid-cols-3 gap-8 max-w-6xl w-full">
+        {dashboardData.map((card, index) => (
+          <motion.div
+            key={index}
+            onClick={() => navigate(card.route)}
+            className="bg-white text-[#4B2E1B] border border-[#E8D6BC] p-6 rounded-xl shadow-md flex flex-col items-center text-center hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: "spring", stiffness: 180 }}
+          >
+            {card.icon}
+            <h2 className="text-xl font-semibold">{card.title}</h2>
+          </motion.div>
+        ))}
       </div>
+
+      {/* Logout Button */}
+      <motion.div
+        className="mt-14"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.3 }}
+      >
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 hover:bg-red-700 text-white font-semibold text-lg px-6 py-3 rounded-full shadow-md transition-colors duration-300 flex items-center gap-2"
+        >
+          <FaSignOutAlt />
+          Logout
+        </button>
+      </motion.div>
     </div>
   );
 };

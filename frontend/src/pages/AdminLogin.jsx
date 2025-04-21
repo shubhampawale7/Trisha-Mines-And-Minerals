@@ -5,9 +5,11 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { FaUserShield } from "react-icons/fa";
 import bgImage from "../assets/mining-bg.jpg";
+import { toast } from "react-toastify";
 
 const AdminLogin = () => {
   const [form, setForm] = useState({ username: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -16,15 +18,19 @@ const AdminLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:5000/api/auth/login",
-        form
+        form,
+        { withCredentials: true } // 🔐 send cookies
       );
-      localStorage.setItem("token", res.data.token);
+      toast.success("Logged in successfully!");
       navigate("/admin");
     } catch (error) {
-      alert("Invalid credentials");
+      toast.error("Invalid credentials");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,23 +67,15 @@ const AdminLogin = () => {
             required
           />
           <button
-            className="bg-yellow-500 text-white p-2 rounded w-full hover:bg-yellow-600 transition"
+            className={`bg-yellow-500 text-white p-2 rounded w-full transition ${
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-yellow-600"
+            }`}
             type="submit"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
-        {/* Create Admin Button */}
-        <div className="mt-4 text-center">
-          <p className="text-gray-500">Don't have an account?</p>
-          <button
-            className="mt-2 bg-gray-800 text-white p-2 rounded w-full hover:bg-gray-900 transition"
-            onClick={() => navigate("/register")}
-          >
-            Create Admin
-          </button>
-        </div>
       </motion.div>
     </div>
   );

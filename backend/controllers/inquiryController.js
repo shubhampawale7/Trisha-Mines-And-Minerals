@@ -1,11 +1,29 @@
 import Inquiry from "../models/Inquiry.js";
 export const createInquiry = async (req, res) => {
   try {
-    const { name, email, message } = req.body;
-    const inquiry = new Inquiry({ name, email, message });
+    const inquiry = new Inquiry(req.body);
     await inquiry.save();
-    res.status(201).json({ message: "Inquiry saved successfully" });
+    res.status(201).json({ success: true, inquiry });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ success: false, message: "Server error", error });
+  }
+};
+
+export const getAllInquiries = async (req, res) => {
+  try {
+    const inquiries = await Inquiry.find().sort({ createdAt: -1 });
+    res.status(200).json(inquiries);
+  } catch (error) {
+    console.error("Error fetching inquiries:", error);
+    res.status(500).json({ message: "Failed to retrieve inquiries" });
+  }
+};
+
+export const deleteInquiry = async (req, res) => {
+  try {
+    await Inquiry.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: true, message: "Inquiry deleted" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Error deleting inquiry" });
   }
 };

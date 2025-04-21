@@ -17,7 +17,9 @@ const AdminRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/auth/register", form);
+      await axios.post("http://localhost:5000/api/auth/register", form, {
+        withCredentials: true, // Important for session cookies
+      });
       alert("Admin registered successfully!");
       navigate("/login");
     } catch (error) {
