@@ -121,7 +121,7 @@ const Gallery = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-[#FDF9F3] to-[#E8D6BC] text-[#2B1A0F] min-h-screen flex flex-col items-center p-6 mt-20">
+    <div className="bg-gradient-to-r from-[#FDF9F3] to-[#E8D6BC] text-[#2B1A0F] min-h-screen flex flex-col items-center p-6 mt-15">
       <motion.h1
         className="text-3xl md:text-4xl font-bold text-[#D9AE4E] text-center mb-8"
         initial={{ opacity: 0, y: -50 }}

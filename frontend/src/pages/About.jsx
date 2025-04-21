@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
 import { FaGem, FaMountain, FaTruckMoving, FaIndustry } from "react-icons/fa";
 
 const About = () => {
   return (
-    <div className="bg-gradient-to-br from-[#FDF9F3] to-[#D9AE4E] text-[#2B1A0F] min-h-screen flex flex-col items-center p-8 mt-25">
+    <div className="bg-gradient-to-br from-[#FDF9F3] to-[#D9AE4E] text-[#2B1A0F] min-h-screen flex flex-col items-center p-8 mt-15">
       {/* Page Heading */}
       <motion.h1
         className="text-4xl md:text-5xl font-bold text-[#2B1A0F] text-center mb-12 leading-tight transform transition-all hover:scale-105 hover:text-[#D9AE4E]"

@@ -50,7 +50,7 @@ const servicesData = [
 
 const Services = () => {
   return (
-    <div className="bg-gradient-to-r from-[#FDF9F3] to-[#E8D6BC] text-[#2B1A0F] min-h-screen flex flex-col items-center p-8 mt-25">
+    <div className="bg-gradient-to-r from-[#FDF9F3] to-[#E8D6BC] text-[#2B1A0F] min-h-screen flex flex-col items-center p-8 mt-15">
       {/* Heading */}
       <motion.h1
         className="text-4xl md:text-5xl font-bold text-[#2B1A0F] text-center mb-12"
