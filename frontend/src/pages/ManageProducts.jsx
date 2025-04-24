@@ -49,7 +49,6 @@ const ManageProducts = () => {
       }
 
       const data = await response.json();
-      console.log("Product added:", data);
     } catch (error) {
       console.error("Error:", error);
       alert("Error adding product. Check console.");

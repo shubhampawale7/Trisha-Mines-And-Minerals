@@ -74,5 +74,19 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+// routes/gallery.js or similar
+router.post("/bulk-delete", async (req, res) => {
+  try {
+    const { ids } = req.body;
 
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "No image IDs provided." });
+    }
+
+    const result = await Gallery.deleteMany({ _id: { $in: ids } });
+    res.json({ message: "Images deleted successfully", result });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting images", error });
+  }
+});
 export default router;

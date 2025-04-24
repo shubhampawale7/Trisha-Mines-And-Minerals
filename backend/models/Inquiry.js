@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const inquirySchema = mongoose.Schema(
   {
     name: {
@@ -10,10 +9,14 @@ const inquirySchema = mongoose.Schema(
       type: String,
       required: true,
     },
-
     message: {
       type: String,
       required: true,
+    },
+    status: {
+      type: String,
+      enum: ["New", "Replied"],
+      default: "New",
     },
   },
   { timestamps: true }

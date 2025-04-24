@@ -13,16 +13,43 @@ import {
 } from "react-icons/md";
 
 const navItems = [
-  { name: "Home", icon: <MdDashboard size={16} /> },
-  { name: "About", icon: <MdPeopleOutline size={16} /> },
-  { name: "Services", icon: <MdDesignServices size={16} /> },
-  { name: "Gallery", icon: <MdCollections size={16} /> },
-  { name: "Contact", icon: <MdSupportAgent size={16} /> },
+  { name: "Home", icon: MdDashboard },
+  { name: "About", icon: MdPeopleOutline },
+  { name: "Services", icon: MdDesignServices },
+  { name: "Gallery", icon: MdCollections },
+  { name: "Contact", icon: MdSupportAgent },
 ];
+
+const sidebarVariants = {
+  hidden: { x: "100%", opacity: 0 },
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 100, damping: 15 },
+  },
+  exit: {
+    x: "100%",
+    opacity: 0,
+    transition: { type: "tween", ease: "easeInOut", duration: 0.3 },
+  },
+};
+
+const itemVariants = {
+  hidden: { x: 50, opacity: 0 },
+  visible: (i) => ({
+    x: 0,
+    opacity: 1,
+    transition: { delay: i * 0.05 },
+  }),
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+
+  const toggleMenu = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <motion.nav
@@ -32,7 +59,6 @@ const Navbar = () => {
       className="fixed top-0 left-0 w-full z-50 bg-[#fffaf5] shadow-md font-['Poppins'] border-b border-[#eee]"
     >
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Logo */}
         <Link
           to="/"
           className="flex items-center gap-3 text-xl md:text-2xl font-bold text-[#2d1f0b] tracking-tight"
@@ -47,13 +73,13 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Mobile Toggle */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-3xl text-[#aa6e26]"
+        <motion.button
+          onClick={toggleMenu}
+          whileTap={{ scale: 0.9 }}
+          className="md:hidden text-3xl text-[#aa6e26] z-50"
         >
           {isOpen ? <MdClose /> : <MdMenu />}
-        </button>
+        </motion.button>
 
         {/* Desktop Nav */}
         <ul className="hidden md:flex items-center gap-8 text-base font-semibold text-[#3e2d1a]">
@@ -71,7 +97,7 @@ const Navbar = () => {
                       : "hover:text-[#aa6e26] hover:bg-[#f9e8d8]"
                   }`}
                 >
-                  {item.icon}
+                  <item.icon size={18} />
                   <span className="text-lg">{item.name}</span>
                 </Link>
               </li>
@@ -80,37 +106,72 @@ const Navbar = () => {
         </ul>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* Mobile Slide-in Menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -10, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-[#fff8f1] px-6 pt-4 pb-6 flex flex-col items-center space-y-4 text-base shadow-inner border-t border-[#f0e8df]"
-          >
-            {navItems.map((item) => {
-              const path =
-                item.name === "Home" ? "/" : `/${item.name.toLowerCase()}`;
-              const isActive = location.pathname === path;
-              return (
-                <Link
-                  key={item.name}
-                  to={path}
-                  onClick={() => setIsOpen(false)}
-                  className={`w-full flex items-center justify-center gap-3 py-2 px-4 rounded-xl transition ${
-                    isActive
-                      ? "bg-[#dba86d] text-white"
-                      : "hover:bg-[#e5c7a0] hover:text-[#4d2f0e]"
-                  }`}
+          <>
+            <motion.div
+              onClick={toggleMenu}
+              className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            <motion.div
+              variants={sidebarVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="fixed top-0 right-0 w-64 h-full bg-[#fffaf5] shadow-xl z-50 p-6 flex flex-col gap-6"
+            >
+              {/* Close Button Inside */}
+              <div className="flex justify-end mb-2">
+                <button
+                  onClick={toggleMenu}
+                  className="text-2xl text-[#aa6e26]"
                 >
-                  {item.icon}
-                  <span className="text-lg font-medium">{item.name}</span>
-                </Link>
-              );
-            })}
-          </motion.div>
+                  <MdClose />
+                </button>
+              </div>
+
+              {navItems.map((item, i) => {
+                const path =
+                  item.name === "Home" ? "/" : `/${item.name.toLowerCase()}`;
+                const isActive = location.pathname === path;
+                return (
+                  <motion.div
+                    key={item.name}
+                    custom={i}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                  >
+                    <Link
+                      to={path}
+                      onClick={toggleMenu}
+                      className={`flex items-center gap-4 px-4 py-3 rounded-xl text-lg font-semibold transition group ${
+                        isActive
+                          ? "bg-[#dba86d] text-white"
+                          : "hover:bg-[#f0dfc7] hover:text-[#4d2f0e]"
+                      }`}
+                    >
+                      <motion.div
+                        whileHover={{
+                          rotate: [0, -10, 10, -5, 5, 0],
+                          scale: 1.2,
+                        }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <item.icon size={20} />
+                      </motion.div>
+                      <span>{item.name}</span>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.nav>

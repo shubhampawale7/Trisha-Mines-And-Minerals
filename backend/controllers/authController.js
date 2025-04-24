@@ -20,24 +20,21 @@ export const registerAdmin = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
- 
+
 // Admin Login
 export const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log("Login attempt:", username, password);
+
     const user = await User.findOne({ username });
-    console.log("Fetched user:", user);
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      console.log("Invalid credentials");
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h", // session expiry
     });
-    console.log("Generated JWT:", token);
 
     // Set token in httpOnly cookie
     res.cookie("token", token, {
@@ -46,7 +43,7 @@ export const loginUser = async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1 hour
       sameSite: "lax",
     });
-    console.log("Login successful");
+
     res.json({ message: "Login successful" });
   } catch (error) {
     console.error("Login error:", error);

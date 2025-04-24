@@ -23,8 +23,8 @@ import Gallery from "./pages/Gallery";
 import ManageGallery from "./admin/ManageGallery";
 import Footer from "./components/Footer";
 import ViewInquiries from "./admin/ViewInquiries";
-import Analytics from "./pages/Analytics";
-import TrackVisit from "./components/TrackVisit";
+//import Analytics from "./pages/Analytics";
+// import TrackVisit from "./components/TrackVisit";
 import BackupDatabase from "./pages/BackupDatabase";
 import ErrorPage from "./pages/ErrorPage";
 import SetupAdmin from "./pages/SetupAdmin";
@@ -89,9 +89,9 @@ const AppContent = () => {
       <ScrollToTop />
       <InactivityHandler timeout={15 * 60 * 1000} />
       {!hideLayout && <Navbar />}
-      {!hideLayout && location.pathname !== "/admin/analytics" && (
+      {/* {!hideLayout && location.pathname !== "/admin/analytics" && (
         <TrackVisit />
-      )}
+      )} */}
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
@@ -187,14 +187,14 @@ const AppContent = () => {
                 </PageWrapper>
               }
             />
-            <Route
+            {/* <Route
               path="analytics"
               element={
                 <PageWrapper>
                   <Analytics />
                 </PageWrapper>
               }
-            />
+            /> */}
             <Route
               path="backup"
               element={
@@ -237,7 +237,9 @@ const AppContent = () => {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <div className="relative">
+        <AppContent />
+      </div>
     </Router>
   );
 }

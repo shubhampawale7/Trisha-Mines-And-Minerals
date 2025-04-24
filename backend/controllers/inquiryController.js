@@ -27,3 +27,30 @@ export const deleteInquiry = async (req, res) => {
     res.status(500).json({ success: false, message: "Error deleting inquiry" });
   }
 };
+
+export const updateInquiryStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!["New", "Replied"].includes(status)) {
+    return res.status(400).json({ success: false, message: "Invalid status" });
+  }
+
+  try {
+    const inquiry = await Inquiry.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+    if (!inquiry) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Inquiry not found" });
+    }
+    res.status(200).json({ success: true, inquiry });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to update status", error });
+  }
+};

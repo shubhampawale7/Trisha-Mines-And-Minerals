@@ -6,8 +6,6 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
-    console.log("Received request to create admin:", req.body);
-
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
@@ -16,15 +14,10 @@ router.post("/", async (req, res) => {
 
     // Check if admin already exists
     const existingAdmins = await User.find({ role: "admin" });
-    console.log("Existing admins:", existingAdmins);
 
     if (existingAdmins.length > 0) {
-      console.log("Admin already exists");
       return res.status(403).json({ message: "Admin already exists" });
     }
-
-    // Hash the password
-    console.log("Hashing password for:", email);
 
     // Create a new admin user
     const newAdmin = new User({
@@ -33,9 +26,6 @@ router.post("/", async (req, res) => {
       password,
       role: "admin",
     });
-
-    console.log("Saving new admin:", newAdmin);
-    await newAdmin.save();
 
     res.status(201).json({ message: "✅ Admin created successfully" });
   } catch (error) {

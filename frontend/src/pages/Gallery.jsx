@@ -2,12 +2,9 @@
 import { useState, useEffect } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { motion } from "framer-motion";
-import Slider from "react-slick";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import gsap from "gsap"; // Import GSAP
+import gsap from "gsap";
 
 const Gallery = () => {
   const [images, setImages] = useState([]);
@@ -16,7 +13,7 @@ const Gallery = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [imagesPerPage] = useState(6);
+  const [imagesPerPage] = useState(10); // Show 10 images per page (2 rows of 5)
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -33,7 +30,7 @@ const Gallery = () => {
         setImages(updatedImages);
 
         const shuffled = [...updatedImages].sort(() => Math.random() - 0.5);
-        setRandomImages(shuffled.slice(0, 6)); // Limit to 6 random images
+        setRandomImages(shuffled.slice(0, 6));
       } catch (error) {
         console.error("Error fetching images:", error);
       } finally {
@@ -80,22 +77,6 @@ const Gallery = () => {
     setRandomImages(shuffled.slice(0, 6));
   };
 
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    swipeToSlide: true,
-    slidesToShow: 2,
-    slidesToScroll: 1,
-    arrows: true,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 1 } },
-      { breakpoint: 640, settings: { slidesToShow: 1 } },
-    ],
-  };
-
   const indexOfLastImage = currentPage * imagesPerPage;
   const indexOfFirstImage = indexOfLastImage - imagesPerPage;
   const currentImages = images.slice(indexOfFirstImage, indexOfLastImage);
@@ -103,7 +84,6 @@ const Gallery = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const totalPages = Math.ceil(images.length / imagesPerPage);
 
-  // GSAP Hover Animation
   const handleHover = (element) => {
     gsap.to(element, {
       scale: 1.05,
@@ -123,7 +103,7 @@ const Gallery = () => {
   return (
     <div className="bg-gradient-to-r from-[#FDF9F3] to-[#E8D6BC] text-[#2B1A0F] min-h-screen flex flex-col items-center p-6 mt-15">
       <motion.h1
-        className="text-3xl md:text-4xl font-bold text-[#D9AE4E] text-center mb-8"
+        className="text-4xl md:text-5xl font-bold text-[#2B1A0F] text-center mb-12"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
@@ -140,34 +120,6 @@ const Gallery = () => {
         </div>
       )}
 
-      {/* 🌟 Stylish Smaller Carousel */}
-      <div className="w-full max-w-2xl mb-12 px-4">
-        <Slider {...sliderSettings}>
-          {randomImages.map((img) => (
-            <div key={img._id} className="px-2">
-              <div
-                onMouseEnter={(e) => handleHover(e.currentTarget)}
-                onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
-                className="rounded-xl overflow-hidden border-4 border-[#D9AE4E] shadow-lg bg-gradient-to-br from-[#fffdf5] to-[#f5e9c6]"
-              >
-                <Zoom>
-                  <img
-                    src={img.fullURL}
-                    alt="carousel"
-                    className="w-full h-40 object-cover rounded-lg transition-transform duration-300"
-                    onError={(e) => {
-                      console.error("Image failed to load:", e.target.src);
-                      e.target.src = "/image.png";
-                    }}
-                  />
-                </Zoom>
-              </div>
-            </div>
-          ))}
-        </Slider>
-      </div>
-
-      {/* Loading Spinner */}
       {isLoading && (
         <div className="flex justify-center items-center w-full h-64">
           <div
@@ -179,9 +131,8 @@ const Gallery = () => {
         </div>
       )}
 
-      {/* 🖼️ Grid of Images */}
       {!isLoading && (
-        <div className="grid md:grid-cols-5 gap-4 max-w-6xl w-full ">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 max-w-6xl w-full">
           {currentImages.map((img) => (
             <div
               key={img._id}
@@ -216,7 +167,6 @@ const Gallery = () => {
         </div>
       )}
 
-      {/* Pagination Controls */}
       {!isLoading && (
         <div className="flex justify-center mt-6">
           <button

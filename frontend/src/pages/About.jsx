@@ -1,11 +1,21 @@
 /* eslint-disable no-unused-vars */
-import { motion } from "framer-motion";
-import { FaGem, FaMountain, FaTruckMoving, FaIndustry } from "react-icons/fa";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { FaGem, FaMountain, FaTruckMoving } from "react-icons/fa";
 
 const About = () => {
+  const expertiseRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: expertiseRef });
+
+  // Scaling effect on Expertise section
+  const scale = useTransform(scrollYProgress, [0, 1], [0.9, 1]);
+
+  // Scroll-based fade-in effect for each feature item
+  const featureOpacity = useTransform(scrollYProgress, [0, 0.3, 1], [0, 1, 1]);
+
   return (
-    <div className="bg-gradient-to-br from-[#FDF9F3] to-[#D9AE4E] text-[#2B1A0F] min-h-screen flex flex-col items-center p-8 mt-15">
-      {/* Page Heading */}
+    <div className="relative bg-gradient-to-br from-[#FDF9F3] to-[#D9AE4E] text-[#2B1A0F] min-h-screen flex flex-col items-center p-8 mt-15">
+      {/* Page Heading with scroll animation */}
       <motion.h1
         className="text-4xl md:text-5xl font-bold text-[#2B1A0F] text-center mb-12 leading-tight transform transition-all hover:scale-105 hover:text-[#D9AE4E]"
         initial={{ opacity: 0, y: -50 }}
@@ -15,7 +25,7 @@ const About = () => {
         About Trishha Mines & Minerals
       </motion.h1>
 
-      {/* Main Content */}
+      {/* Main Content with scroll-based opacity */}
       <motion.div
         className="max-w-5xl text-base md:text-lg text-center leading-relaxed text-[#2B1A0F] mb-8"
         initial={{ opacity: 0, scale: 0.95 }}
@@ -49,7 +59,7 @@ const About = () => {
         </p>
       </motion.div>
 
-      {/* New Section: Our Vision */}
+      {/* Vision Section with scroll-based animation */}
       <motion.div
         className="bg-[#D9AE4E] text-white py-12 px-6 rounded-xl max-w-5xl w-full text-center mt-20 shadow-lg"
         initial={{ opacity: 0, y: 50 }}
@@ -66,90 +76,88 @@ const About = () => {
         </p>
       </motion.div>
 
-      {/* Feature Sections */}
-      <div className="grid md:grid-cols-3 gap-8 mt-14 max-w-6xl w-full mb-12">
-        {/* Mining */}
-        <motion.div
-          className="bg-white text-[#2B1A0F] border border-[#E8D6BC] p-6 rounded-xl shadow-lg text-center flex flex-col items-center hover:shadow-xl transition-shadow duration-300 hover:scale-105 transform hover:scale-110"
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 200 }}
-        >
-          <FaMountain className="text-[#D9AE4E] text-6xl mb-4 transition-transform duration-300 transform hover:scale-110" />
-          <h2 className="text-2xl font-semibold mb-2">Premium Mining</h2>
-          <p className="text-sm mb-4">
-            Our state-of-the-art mining methods allow us to extract the finest
-            minerals while minimizing environmental impact. By using sustainable
-            extraction processes, we ensure that every step we take aligns with
-            our responsibility towards nature.
-          </p>
-          <p className="text-sm">
-            With a global reach, we ensure that our minerals are mined
-            ethically, contributing to both local economies and global markets.
-          </p>
-        </motion.div>
-
-        {/* Processing */}
-        <motion.div
-          className="bg-white text-[#2B1A0F] border border-[#E8D6BC] p-6 rounded-xl shadow-lg text-center flex flex-col items-center hover:shadow-xl transition-shadow duration-300 hover:scale-105 transform hover:scale-110"
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 200 }}
-        >
-          <FaGem className="text-[#D9AE4E] text-6xl mb-4 transition-transform duration-300 transform hover:scale-110" />
-          <h2 className="text-2xl font-semibold mb-2">Refined Processing</h2>
-          <p className="text-sm mb-4">
-            Our advanced processing facilities ensure that every batch of
-            minerals meets the highest standards of purity and quality. We
-            utilize cutting-edge technology to refine and grade minerals to the
-            exact specifications required by our clients.
-          </p>
-          <p className="text-sm">
-            With a focus on consistency, our processing systems guarantee
-            top-tier products, whether it's for industrial use, export, or
-            manufacturing purposes.
-          </p>
-        </motion.div>
-
-        {/* Logistics */}
-        <motion.div
-          className="bg-white text-[#2B1A0F] border border-[#E8D6BC] p-6 rounded-xl shadow-lg text-center flex flex-col items-center hover:shadow-xl transition-shadow duration-300 hover:scale-105 transform hover:scale-110"
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 200 }}
-        >
-          <FaTruckMoving className="text-[#D9AE4E] text-6xl mb-4 transition-transform duration-300 transform hover:scale-110" />
-          <h2 className="text-2xl font-semibold mb-2">Efficient Logistics</h2>
-          <p className="text-sm mb-4">
-            Our robust logistics network ensures the timely and safe delivery of
-            minerals to clients worldwide. With efficient transportation
-            channels and a dedicated team, we guarantee on-time delivery, no
-            matter the destination.
-          </p>
-          <p className="text-sm">
-            We take pride in maintaining strong relationships with our
-            transportation partners to ensure that your order arrives as
-            promised, while adhering to the highest standards of safety and
-            reliability.
-          </p>
-        </motion.div>
-      </div>
-
-      {/* New Section: Our Expertise */}
+      {/* Feature Sections with scroll-based animation */}
       <motion.div
+        className="grid md:grid-cols-3 gap-8 mt-14 max-w-6xl w-full mb-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        {[
+          {
+            icon: (
+              <FaMountain className="text-[#D9AE4E] text-6xl mb-4 transition-transform duration-300" />
+            ),
+            title: "Premium Mining",
+            desc1:
+              "Our state-of-the-art mining methods allow us to extract the finest minerals while minimizing environmental impact.",
+            desc2:
+              "With a global reach, we ensure that our minerals are mined ethically, contributing to both local economies and global markets.",
+          },
+          {
+            icon: (
+              <FaGem className="text-[#D9AE4E] text-6xl mb-4 transition-transform duration-300" />
+            ),
+            title: "Refined Processing",
+            desc1:
+              "Our advanced processing facilities ensure that every batch of minerals meets the highest standards of purity and quality.",
+            desc2:
+              "With a focus on consistency, our systems guarantee top-tier products for all purposes.",
+          },
+          {
+            icon: (
+              <FaTruckMoving className="text-[#D9AE4E] text-6xl mb-4 transition-transform duration-300" />
+            ),
+            title: "Efficient Logistics",
+            desc1:
+              "Our robust logistics network ensures timely and safe delivery of minerals globally.",
+            desc2:
+              "Strong partnerships guarantee reliability and high standards of safety.",
+          },
+        ].map((item, i) => (
+          <motion.div
+            key={i}
+            className="bg-white text-[#2B1A0F] border border-[#E8D6BC] p-6 rounded-xl shadow-lg text-center flex flex-col items-center hover:shadow-xl transition-shadow duration-300"
+            style={{ opacity: featureOpacity }} // Scroll opacity effect
+            onMouseMove={(e) => {
+              const card = e.currentTarget;
+              const rect = card.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              const centerX = rect.width / 2;
+              const centerY = rect.height / 2;
+              const rotateX = ((y - centerY) / centerY) * 10;
+              const rotateY = ((x - centerX) / centerX) * -10;
+              card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "rotateX(0deg) rotateY(0deg)";
+            }}
+          >
+            {item.icon}
+            <h2 className="text-2xl font-semibold mb-2">{item.title}</h2>
+            <p className="text-sm mb-2">{item.desc1}</p>
+            <p className="text-sm">{item.desc2}</p>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Expertise Section with scroll-based scaling */}
+      <motion.div
+        ref={expertiseRef}
+        style={{ scale }}
         className="max-w-5xl w-full py-12 px-6 mt-20 bg-gradient-to-r from-[#D9AE4E] to-[#FDF9F3] rounded-xl shadow-xl text-center text-[#2B1A0F]"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.5 }}
       >
         <h2 className="text-3xl font-semibold mb-6">Our Expertise</h2>
         <div className="grid md:grid-cols-2 gap-10">
           <div>
-            <h3 className="text-2xl font-semibold text-[#ffffff] mb-2">
+            <h3 className="text-2xl font-semibold text-white mb-2">
               Advanced Technologies
             </h3>
             <p className="text-lg">
-              We use cutting-edge technology and best practices to ensure that
-              our mining and processing methods are state-of-the-art. From
-              AI-driven exploration to automated processing systems, we lead the
-              industry in innovation.
+              We use cutting-edge technology to ensure our methods are
+              state-of-the-art. From AI-driven exploration to automated
+              processing systems, we lead the industry in innovation.
             </p>
           </div>
           <div>
@@ -157,16 +165,14 @@ const About = () => {
               Global Presence
             </h3>
             <p className="text-lg">
-              With operations across multiple continents, our global presence
-              allows us to service a wide range of industries and markets. We
-              bring high-quality minerals to every corner of the globe with
-              efficiency and reliability.
+              With operations across multiple continents, we serve industries
+              worldwide, delivering minerals with reliability and care.
             </p>
           </div>
         </div>
       </motion.div>
 
-      {/* Call to Action */}
+      {/* Call to Action with scroll-based fade-in */}
       <motion.div
         className="mt-14"
         initial={{ opacity: 0, y: 40 }}

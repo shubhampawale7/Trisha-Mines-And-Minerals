@@ -13,10 +13,11 @@ import { authenticateToken } from "./middleware/authMiddleware.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import galleryRoutes from "./routes/galleryRoutes.js";
 import sendEmailRoute from "./routes/sendEmailRoute.js";
-import analyticsRoute from "./routes/analyticsRoute.js";
+
 import backupRoutes from "./routes/backup.js";
 import nodemailer from "nodemailer";
 import setupAdminRoute from "./routes/setupAdmin.js";
+import adminStatsRoutes from "./routes/adminStats.js";
 
 dotenv.config();
 connectDB();
@@ -44,8 +45,9 @@ app.use("/api/contact", contactRoutes);
 app.use("/api", adminRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api", sendEmailRoute);
-app.use("/api/analytics", analyticsRoute);
+
 app.use("/api/backup", backupRoutes);
+app.use("/api/admin", adminStatsRoutes);
 
 // ✅ Protected Route: Check logged-in user
 app.get("/api/user", authenticateToken, async (req, res) => {
